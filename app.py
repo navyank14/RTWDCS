@@ -4,17 +4,34 @@ from keras.models import load_model
 import os
 from PIL import Image
 
-# Define paths
-MODEL_PATH = './weights/waste_model.h5'
 
-# Load the model
-def load_waste_model(model_path):
-    try:
-        model = load_model(model_path)
-        return model
-    except Exception as e:
-        st.error(f"Error loading model: {e}")
-        return None
+# Load YOLOv5 model
+@st.cache_resource
+def load_model():
+    model = torch.hub.load("ultralytics/yolov5", "custom", path="./weights/best.pt", force_reload=True)
+    return model
+
+def main():
+    st.title("Waste Detection App")
+
+    model = load_model()
+
+    # Upload image
+    uploaded_image = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
+    if uploaded_image:
+        image = Image.open(uploaded_image)
+        st.image(image, caption="Uploaded Image", use_column_width=True)
+
+        # Perform inference
+        results = model(image)
+        results.render()
+
+        # Display predictions
+        st.image(results.imgs[0], caption="Detections", use_column_width=True)
+        st.write(results.pandas().xyxy[0])  # Display predictions in a table
+
+if __name__ == "__main__":
+    main()
 
 # Waste categorization and disposal guidance
 def predict_waste(image, model):
@@ -58,3 +75,9 @@ if uploaded_file:
         category, disposal = predict_waste(image, model)
         st.success(f"Category: {category}")
         st.info(f"Disposal Method: {disposal}")
+
+
+
+
+
+
