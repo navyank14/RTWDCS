@@ -4,9 +4,11 @@ from tensorflow.keras.models import load_model
 from PIL import Image
 import numpy as np
 import io
+from ultralytics import YOLO
 
-# Ensure paths are correct
-MODEL_PATH = './weights/waste_model.h5'
+# Load YOLOv5 model
+MODEL_PATH = "./weights/yolov5l.pt"
+model = YOLO(MODEL_PATH)
 
 # Load the trained waste detection model
 def load_waste_model(model_path):
@@ -50,7 +52,7 @@ def predict_waste(image, model):
         return None, None
 
 # Streamlit app layout
-st.title("Waste Detection and Classification :")
+st.title("Waste Detection ")
 st.write("Capture an image using your camera to identify the waste category and learn how to dispose of it.")
 
 # Load the model when the app starts
@@ -83,6 +85,9 @@ if uploaded_file:
     image = Image.open(uploaded_file)
     st.image(image, caption="Uploaded Image", use_column_width=True)
     st.write("Processing...")        
+
+ # Convert to numpy array for YOLO compatibility
+img_array = np.array(image)
 
 # Test the model with a local image
 if st.button("Test Model with Local Image"):

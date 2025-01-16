@@ -1,0 +1,10 @@
+# Train/val/test dataset paths
+test: C:\Users\HP\OneDrive\Desktop\MINI!!!!\datasets\test  # Path to training images
+val: C:\Users\HP\OneDrive\Desktop\MINI!!!!\datasets\valid     # Path to validation images
+train: C:\Users\HP\OneDrive\Desktop\MINI!!!!\datasets\train    # Path to test images (optional)
+
+# Number of classes
+nc:  # Number of classes in your dataset
+
+# Class names
+names: ['Plastic', 'Metal', 'Organic', 'Glass', 'Other']  # List of class names
